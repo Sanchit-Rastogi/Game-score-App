@@ -18,6 +18,23 @@ class _GameState extends State<Game> {
   bool team1 = false;
   bool team2 = false;
 
+  final myController = TextEditingController();
+
+  void assignValue() {
+    int value = int.parse(myController.text);
+    if (team1 == true) {
+      setState(() {
+        team2Bid = value;
+      });
+      print('$team2Bid = team 2 bid change');
+    } else {
+      setState(() {
+        team1Bid = value;
+      });
+      print('$team1Bid = team 1 bid change');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +65,6 @@ class _GameState extends State<Game> {
                     bidValue = dropDownValue;
                     team2Bid = bidValue;
                     team2 = true;
-                    team1 = false;
                   });
                 }, 150),
                 customDropDown(),
@@ -57,7 +73,6 @@ class _GameState extends State<Game> {
                     bidValue = dropDownValue;
                     team1Bid = bidValue;
                     team1 = true;
-                    team2 = false;
                   });
                 }, 150),
               ],
@@ -70,15 +85,32 @@ class _GameState extends State<Game> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 customButton('CALCULATE', () {
-                  if (team1) {
-                    int check = 75 - team2Score;
-                    print('check created');
-                    print("$team1Bid and $check");
-                    if (team1Bid > check) {
+                  assignValue();
+                  if (team1 == true) {
+                    int check = 75 - team2Bid;
+                    if (check < team1Bid) {
+                      setState(() {
+                        team1Score = check + 100;
+                        team2Score = team2Bid;
+                      });
+                    } else {
                       setState(() {
                         team1Score = team1Bid;
+                        team2Score = check + 100;
                       });
-                      print('check happen');
+                    }
+                  } else {
+                    int check = 75 - team1Bid;
+                    if (check < team2Bid) {
+                      setState(() {
+                        team1Score = team1Bid;
+                        team2Score = check + 100;
+                      });
+                    } else {
+                      setState(() {
+                        team1Score = check + 100;
+                        team2Score = team2Bid;
+                      });
                     }
                   }
                 }, 125),
@@ -89,18 +121,7 @@ class _GameState extends State<Game> {
                   ),
                   onPressed: () {},
                 ),
-                valueTextField('OTHER TEAM GAIN POINTS', 150, (value) {
-                  print("$value got this");
-                  setState(() {
-                    print(team1);
-                    if (!team1) {
-                      team1Score = value;
-                    } else {
-                      team2Score = value;
-                    }
-                    print('$team2Score team 2 score');
-                  });
-                }),
+                valueTextField('OTHER TEAM GAIN POINTS', 150),
               ],
             ),
             SizedBox(
@@ -109,13 +130,13 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                scoreBox(team1Score.toString(), 100, 50),
+                scoreBox(team2Score.toString(), 100, 50),
                 Text(
                   bidValue.toString(),
                   style: TextStyle(
                       fontSize: 30, decoration: TextDecoration.underline),
                 ),
-                scoreBox(team2Score.toString(), 100, 50),
+                scoreBox(team1Score.toString(), 100, 50),
               ],
             ),
             SizedBox(
@@ -212,7 +233,7 @@ class _GameState extends State<Game> {
     );
   }
 
-  Widget valueTextField(String hintText, double width, Function onChange) {
+  Widget valueTextField(String hintText, double width) {
     return Container(
       width: width,
       child: TextField(
@@ -220,7 +241,7 @@ class _GameState extends State<Game> {
           hintText: hintText,
           hintStyle: kHintTextStyle,
         ),
-        onChanged: onChange,
+        controller: myController,
       ),
     );
   }
