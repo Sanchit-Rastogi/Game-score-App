@@ -11,11 +11,10 @@ class Home extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            customFlatButton('Language 1', () {}),
+            customFlatButton('Arabic', () {}),
             customFlatButton('English', () {
               Navigator.pushNamed(context, 'game');
             }),
-            customFlatButton('Language 3', () {}),
           ],
         ),
       ),

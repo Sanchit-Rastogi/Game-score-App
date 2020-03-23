@@ -17,11 +17,15 @@ class _GameState extends State<Game> {
   int team2Score = 0;
   bool team1 = false;
   bool team2 = false;
+  List<int> team1Scores = [];
+  List<int> team2Scores = [];
 
   final myController = TextEditingController();
 
   void assignValue() {
     int value = int.parse(myController.text);
+    print('team1 bool value $team1');
+    print('team2 bool value $team2');
     if (team1 == true) {
       setState(() {
         team2Bid = value;
@@ -42,6 +46,30 @@ class _GameState extends State<Game> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text('Shelem'),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                final action = CupertinoActionSheet(
+                  actions: <Widget>[
+                    CupertinoActionSheetAction(
+                      child: Text("Instructions"),
+                      onPressed: () {
+                        print("Action 1 is been clicked");
+                      },
+                    ),
+                    CupertinoActionSheetAction(
+                      child: Text("Game Rules"),
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'englishRules');
+                      },
+                    ),
+                  ],
+                );
+                showCupertinoModalPopup(
+                    context: context, builder: (context) => action);
+              })
+        ],
       ),
       body: Container(
         padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
@@ -65,6 +93,7 @@ class _GameState extends State<Game> {
                     bidValue = dropDownValue;
                     team2Bid = bidValue;
                     team2 = true;
+                    team1 = false;
                   });
                 }, 150),
                 customDropDown(),
@@ -73,6 +102,7 @@ class _GameState extends State<Game> {
                     bidValue = dropDownValue;
                     team1Bid = bidValue;
                     team1 = true;
+                    team2 = false;
                   });
                 }, 150),
               ],
@@ -87,29 +117,37 @@ class _GameState extends State<Game> {
                 customButton('CALCULATE', () {
                   assignValue();
                   if (team1 == true) {
-                    int check = 75 - team2Bid;
-                    if (check < team1Bid) {
+                    int check = 80 - team1Bid;
+                    if (check >= team2Bid) {
                       setState(() {
-                        team1Score = check + 100;
-                        team2Score = team2Bid;
+                        team1Score = team1Bid;
+                        team1Scores.add(team1Score);
+                        team2Score = -100 + (-team2Bid);
+                        team2Scores.add(team2Score);
                       });
                     } else {
                       setState(() {
-                        team1Score = team1Bid;
-                        team2Score = check + 100;
+                        team1Score = -100 + (-team1Bid);
+                        team1Scores.add(team1Score);
+                        team2Score = team2Bid;
+                        team2Scores.add(team2Score);
                       });
                     }
                   } else {
-                    int check = 75 - team1Bid;
-                    if (check < team2Bid) {
+                    int check = 80 - team2Bid;
+                    if (check >= team1Bid) {
                       setState(() {
-                        team1Score = team1Bid;
-                        team2Score = check + 100;
+                        team1Score = -100 + (-team1Bid);
+                        team1Scores.add(team1Score);
+                        team2Score = team2Bid;
+                        team2Scores.add(team2Score);
                       });
                     } else {
                       setState(() {
-                        team1Score = check + 100;
-                        team2Score = team2Bid;
+                        team1Score = team1Bid;
+                        team1Scores.add(team1Score);
+                        team2Score = -100 + (-team2Bid);
+                        team2Scores.add(team2Score);
                       });
                     }
                   }
@@ -119,7 +157,12 @@ class _GameState extends State<Game> {
                     Icons.refresh,
                     size: 40,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      team1Scores.removeLast();
+                      team2Scores.removeLast();
+                    });
+                  },
                 ),
                 valueTextField('OTHER TEAM GAIN POINTS', 150),
               ],
@@ -127,25 +170,43 @@ class _GameState extends State<Game> {
             SizedBox(
               height: 40,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                scoreBox(team2Score.toString(), 100, 50),
-                Text(
-                  bidValue.toString(),
-                  style: TextStyle(
-                      fontSize: 30, decoration: TextDecoration.underline),
-                ),
-                scoreBox(team1Score.toString(), 100, 50),
-              ],
+            Container(
+              height: 120,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  scoreBoard(team2Scores),
+                  Text(
+                    bidValue.toString(),
+                    style: TextStyle(
+                        fontSize: 30, decoration: TextDecoration.underline),
+                  ),
+                  scoreBoard(team1Scores),
+                ],
+              ),
             ),
             SizedBox(
-              height: 40,
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                customButton('NEW GAME', () {}, 150),
+                customButton('NEW GAME', () {
+                  setState(() {
+                    team1Bid = 0;
+                    team1 = false;
+                    team1Score = 0;
+                    team2 = false;
+                    team2Bid = 0;
+                    team2Score = 0;
+                    bidValue = 0;
+                    dropDownValue = 5;
+                    team2Scores.clear();
+                    team1Scores.clear();
+                    myController.clear();
+                  });
+                }, 150),
               ],
             ),
             SizedBox(
@@ -154,8 +215,18 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customButton('SHLM FOR TEAM 2', () {}, 140),
-                customButton('SHLM FOR TEAM 1', () {}, 140),
+                customButton('SHLM FOR TEAM 2', () {
+                  setState(() {
+                    team2Scores.last = team2Scores.last + 260;
+                    team1Scores.last = team1Scores.last - 260;
+                  });
+                }, 140),
+                customButton('SHLM FOR TEAM 1', () {
+                  setState(() {
+                    team1Scores.last = team1Scores.last + 260;
+                    team2Scores.last = team2Scores.last - 260;
+                  });
+                }, 140),
               ],
             ),
             SizedBox(
@@ -164,8 +235,16 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customButton('ADD 260 FOR TEAM 2', () {}, 140),
-                customButton('ADD 260 FOR TEAM 1', () {}, 140),
+                customButton('ADD 260 FOR TEAM 2', () {
+                  setState(() {
+                    team2Scores.last = team2Scores.last + 260;
+                  });
+                }, 140),
+                customButton('ADD 260 FOR TEAM 1', () {
+                  setState(() {
+                    team1Scores.last = team1Scores.last + 260;
+                  });
+                }, 140),
               ],
             ),
             SizedBox(
@@ -174,8 +253,16 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customButton('SUBTRACT 260 FROM TEAM 2', () {}, 140),
-                customButton('SUBTRACT 260 FROM TEAM 1', () {}, 140),
+                customButton('SUBTRACT 260 FROM TEAM 2', () {
+                  setState(() {
+                    team2Scores.last = team2Scores.last - 260;
+                  });
+                }, 140),
+                customButton('SUBTRACT 260 FROM TEAM 1', () {
+                  setState(() {
+                    team1Scores.last = team1Scores.last - 260;
+                  });
+                }, 140),
               ],
             )
           ],
@@ -246,18 +333,20 @@ class _GameState extends State<Game> {
     );
   }
 
-  Widget scoreBox(String score, double width, double height) {
+  Widget scoreBoard(List<int> scores) {
     return Container(
-      width: width,
-      height: height,
+      width: 100,
       color: Colors.blue,
-      child: Align(
-        alignment: Alignment.center,
-        child: Text(
-          score,
-          style: kScoreTextStyle,
-          textAlign: TextAlign.center,
-        ),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: scores.length,
+        itemBuilder: (context, index) {
+          return Text(
+            scores[index].toString(),
+            style: kScoreTextStyle,
+            textAlign: TextAlign.center,
+          );
+        },
       ),
     );
   }
