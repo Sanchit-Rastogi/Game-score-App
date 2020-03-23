@@ -46,3 +46,48 @@ const kEnglishInstructions4 = Text(
   "A   K     Q     J     10    9     8     7   6  5  4  3   2 10  -     -     -     10    -     -     -   -  5  -  -   -",
   style: kEnglishRuleTextStyle,
 );
+
+const kArabicInstructions1 = Text(
+  "كل لاعب يحصل على 12 بطاقة و الزائد يبقى في الأرض.",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions2 = Text(
+  "اللاعب الأعلى مزايدة يحصل على الكروت الزائدة و يقوم بالاخيار ثم يقوم باخراج كروت ليتبقى في يده 12 كرت.",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions3 = Text(
+  "تكون االمزايدات بمضاعفات  الخمسة.",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions4 = Text(
+  "تبدا المزايدات من 105 الى 175 في البرنامج نختصر الرقم 105 ب 5 10 15 الى 75.",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions5 = Text(
+  "يجبر اللاعب الأعلى مزايدة بلعب كرت الحكم في أول جولة.",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions6 = Text(
+  "في حال إدخال الجوكر يعتبر الجوكر أقوى كرت حكم.",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions7 = Text(
+  "تقوم اللعبة على نفس قوانين الحكم في اللعب.",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions8 = Text(
+  "تتوزع النقاط كالتالي:",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions9 = Text(
+  "A	K	Q	J	10	9	8	7	6	5	4	3	2",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions10 = Text(
+  "10	-	-	-	10	-	-	-	-	5	-	-	-",
+  style: kEnglishRuleTextStyle,
+);
+const kArabicInstructions11 = Text(
+  "و الجوكر في حال إضافته يساوي عشر نقاط.",
+  style: kEnglishRuleTextStyle,
+);

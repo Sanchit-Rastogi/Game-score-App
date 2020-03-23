@@ -1,14 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:alisshelemios/constants/styles.dart';
 import 'package:alisshelemios/constants/values.dart';
 
-class Game extends StatefulWidget {
+class GameArabic extends StatefulWidget {
   @override
-  _GameState createState() => _GameState();
+  _GameArabicState createState() => _GameArabicState();
 }
 
-class _GameState extends State<Game> {
+class _GameArabicState extends State<GameArabic> {
   int dropDownValue = 5;
   int bidValue = 0;
   int team2Bid = 0;
@@ -24,18 +24,14 @@ class _GameState extends State<Game> {
 
   void assignValue() {
     int value = int.parse(myController.text);
-    print('team1 bool value $team1');
-    print('team2 bool value $team2');
     if (team1 == true) {
       setState(() {
         team2Bid = value;
       });
-      print('$team2Bid = team 2 bid change');
     } else {
       setState(() {
         team1Bid = value;
       });
-      print('$team1Bid = team 1 bid change');
     }
   }
 
@@ -45,7 +41,7 @@ class _GameState extends State<Game> {
       backgroundColor: Colors.lightBlueAccent,
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text('Shelem'),
+        title: Text('شلم'),
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.menu),
@@ -53,9 +49,15 @@ class _GameState extends State<Game> {
                 final action = CupertinoActionSheet(
                   actions: <Widget>[
                     CupertinoActionSheetAction(
-                      child: Text("Game Rules"),
+                      child: Text("قوانين اللعبة"),
                       onPressed: () {
-                        Navigator.pushNamed(context, 'englishRules');
+                        Navigator.pushNamed(context, 'arabicRules');
+                      },
+                    ),
+                    CupertinoActionSheetAction(
+                      child: Text("طريقة الاستخدام"),
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'arabicInstructions');
                       },
                     ),
                   ],
@@ -72,8 +74,8 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customTextField('TEAM 2 NAME', 150),
-                customTextField('TEAM 1 NAME', 150),
+                customTextField('اسم الفريق الثاني', 150),
+                customTextField('اسم الفريق الاول', 150),
               ],
             ),
             SizedBox(
@@ -82,7 +84,7 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customButton('TEAM 2 ORDER', () {
+                customButton('طلعة الفريق الثاني', () {
                   setState(() {
                     bidValue = dropDownValue;
                     team2Bid = bidValue;
@@ -91,7 +93,7 @@ class _GameState extends State<Game> {
                   });
                 }, 150),
                 customDropDown(),
-                customButton('TEAM 1 ORDER', () {
+                customButton('طلعة الفريق الاول', () {
                   setState(() {
                     bidValue = dropDownValue;
                     team1Bid = bidValue;
@@ -108,7 +110,7 @@ class _GameState extends State<Game> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                customButton('CALCULATE', () {
+                customButton('احسب', () {
                   assignValue();
                   if (team1 == true) {
                     int check = 80 - team1Bid;
@@ -158,7 +160,7 @@ class _GameState extends State<Game> {
                     });
                   },
                 ),
-                valueTextField('OTHER TEAM GAIN POINTS', 150),
+                valueTextField(' نقاط الخصم', 150),
               ],
             ),
             SizedBox(
@@ -186,7 +188,7 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                customButton('NEW GAME', () {
+                customButton('لعبة جديدة', () {
                   setState(() {
                     team1Bid = 0;
                     team1 = false;
@@ -209,13 +211,13 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customButton('SHLM FOR TEAM 2', () {
+                customButton('شلم', () {
                   setState(() {
                     team2Scores.last = team2Scores.last + 260;
                     team1Scores.last = team1Scores.last - 260;
                   });
                 }, 140),
-                customButton('SHLM FOR TEAM 1', () {
+                customButton('شلم', () {
                   setState(() {
                     team1Scores.last = team1Scores.last + 260;
                     team2Scores.last = team2Scores.last - 260;
@@ -229,12 +231,12 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customButton('ADD 260 FOR TEAM 2', () {
+                customButton('زيد 260', () {
                   setState(() {
                     team2Scores.last = team2Scores.last + 260;
                   });
                 }, 140),
-                customButton('ADD 260 FOR TEAM 1', () {
+                customButton('زيد 260', () {
                   setState(() {
                     team1Scores.last = team1Scores.last + 260;
                   });
@@ -247,12 +249,12 @@ class _GameState extends State<Game> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                customButton('SUBTRACT 260 FROM TEAM 2', () {
+                customButton(' نقص 260', () {
                   setState(() {
                     team2Scores.last = team2Scores.last - 260;
                   });
                 }, 140),
-                customButton('SUBTRACT 260 FROM TEAM 1', () {
+                customButton(' نقص 260', () {
                   setState(() {
                     team1Scores.last = team1Scores.last - 260;
                   });
