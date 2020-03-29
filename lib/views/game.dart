@@ -65,201 +65,207 @@ class _GameState extends State<Game> {
               })
         ],
       ),
-      body: Container(
-        padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                customTextField('TEAM 2 NAME', 150),
-                customTextField('TEAM 1 NAME', 150),
-              ],
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                customButton('TEAM 2 ORDER', () {
-                  setState(() {
-                    bidValue = dropDownValue;
-                    team2Bid = bidValue;
-                    team2 = true;
-                    team1 = false;
-                  });
-                }, 150),
-                customDropDown(),
-                customButton('TEAM 1 ORDER', () {
-                  setState(() {
-                    bidValue = dropDownValue;
-                    team1Bid = bidValue;
-                    team1 = true;
-                    team2 = false;
-                  });
-                }, 150),
-              ],
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                customButton('CALCULATE', () {
-                  assignValue();
-                  if (team1 == true) {
-                    int check = 80 - team1Bid;
-                    if (check >= team2Bid) {
-                      setState(() {
-                        team1Score = team1Bid;
-                        team1Scores.add(team1Score);
-                        team2Score = -100 + (-team2Bid);
-                        team2Scores.add(team2Score);
-                      });
-                    } else {
-                      setState(() {
-                        team1Score = -100 + (-team1Bid);
-                        team1Scores.add(team1Score);
-                        team2Score = team2Bid;
-                        team2Scores.add(team2Score);
-                      });
-                    }
-                  } else {
-                    int check = 80 - team2Bid;
-                    if (check >= team1Bid) {
-                      setState(() {
-                        team1Score = -100 + (-team1Bid);
-                        team1Scores.add(team1Score);
-                        team2Score = team2Bid;
-                        team2Scores.add(team2Score);
-                      });
-                    } else {
-                      setState(() {
-                        team1Score = team1Bid;
-                        team1Scores.add(team1Score);
-                        team2Score = -100 + (-team2Bid);
-                        team2Scores.add(team2Score);
-                      });
-                    }
-                  }
-                }, 125),
-                FlatButton(
-                  child: Icon(
-                    Icons.refresh,
-                    size: 40,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      team1Scores.removeLast();
-                      team2Scores.removeLast();
-                    });
-                  },
-                ),
-                valueTextField('OTHER TEAM GAIN POINTS', 150),
-              ],
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            Container(
-              height: 120,
-              child: Row(
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(20, 25, 20, 25),
+          child: Column(
+            children: <Widget>[
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  scoreBoard(team2Scores),
-                  Text(
-                    bidValue.toString(),
-                    style: TextStyle(
-                        fontSize: 30, decoration: TextDecoration.underline),
-                  ),
-                  scoreBoard(team1Scores),
+                  customTextField('TEAM 2 NAME', 150),
+                  customTextField('TEAM 1 NAME', 150),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                customButton('NEW GAME', () {
-                  setState(() {
-                    team1Bid = 0;
-                    team1 = false;
-                    team1Score = 0;
-                    team2 = false;
-                    team2Bid = 0;
-                    team2Score = 0;
-                    bidValue = 0;
-                    dropDownValue = 5;
-                    team2Scores.clear();
-                    team1Scores.clear();
-                    myController.clear();
-                  });
-                }, 150),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                customButton('SHLM FOR TEAM 2', () {
-                  setState(() {
-                    team2Scores.last = team2Scores.last + 260;
-                    team1Scores.last = team1Scores.last - 260;
-                  });
-                }, 140),
-                customButton('SHLM FOR TEAM 1', () {
-                  setState(() {
-                    team1Scores.last = team1Scores.last + 260;
-                    team2Scores.last = team2Scores.last - 260;
-                  });
-                }, 140),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                customButton('ADD 260 FOR TEAM 2', () {
-                  setState(() {
-                    team2Scores.last = team2Scores.last + 260;
-                  });
-                }, 140),
-                customButton('ADD 260 FOR TEAM 1', () {
-                  setState(() {
-                    team1Scores.last = team1Scores.last + 260;
-                  });
-                }, 140),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                customButton('SUBTRACT 260 FROM TEAM 2', () {
-                  setState(() {
-                    team2Scores.last = team2Scores.last - 260;
-                  });
-                }, 140),
-                customButton('SUBTRACT 260 FROM TEAM 1', () {
-                  setState(() {
-                    team1Scores.last = team1Scores.last - 260;
-                  });
-                }, 140),
-              ],
-            )
-          ],
+              SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  customButton('TEAM 2 ORDER', () {
+                    setState(() {
+                      bidValue = dropDownValue;
+                      team2Bid = bidValue;
+                      team2 = true;
+                      team1 = false;
+                    });
+                  }, 125),
+                  customDropDown(),
+                  customButton('TEAM 1 ORDER', () {
+                    setState(() {
+                      bidValue = dropDownValue;
+                      team1Bid = bidValue;
+                      team1 = true;
+                      team2 = false;
+                    });
+                  }, 125),
+                ],
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  customButton('CALCULATE', () {
+                    assignValue();
+                    if (team1 == true) {
+                      int check = 80 - team1Bid;
+                      if (check >= team2Bid) {
+                        setState(() {
+                          team1Score = team1Bid;
+                          team1Scores.add(team1Score);
+                          team2Score = -100 + (-team2Bid);
+                          team2Scores.add(team2Score);
+                        });
+                      } else {
+                        setState(() {
+                          team1Score = -100 + (-team1Bid);
+                          team1Scores.add(team1Score);
+                          team2Score = team2Bid;
+                          team2Scores.add(team2Score);
+                        });
+                      }
+                    } else {
+                      int check = 80 - team2Bid;
+                      if (check >= team1Bid) {
+                        setState(() {
+                          team1Score = -100 + (-team1Bid);
+                          team1Scores.add(team1Score);
+                          team2Score = team2Bid;
+                          team2Scores.add(team2Score);
+                        });
+                      } else {
+                        setState(() {
+                          team1Score = team1Bid;
+                          team1Scores.add(team1Score);
+                          team2Score = -100 + (-team2Bid);
+                          team2Scores.add(team2Score);
+                        });
+                      }
+                    }
+                  }, 125),
+                  FlatButton(
+                    child: Icon(
+                      Icons.refresh,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        team1Scores.removeLast();
+                        team2Scores.removeLast();
+                      });
+                    },
+                  ),
+                  valueTextField('OTHER TEAM GAIN POINTS', 100),
+                ],
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              Container(
+                height: 120,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    scoreBoard(team2Scores),
+                    Text(
+                      bidValue.toString(),
+                      style: TextStyle(
+                          fontSize: 30, decoration: TextDecoration.underline),
+                    ),
+                    scoreBoard(team1Scores),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  customButton('NEW GAME', () {
+                    setState(() {
+                      team1Bid = 0;
+                      team1 = false;
+                      team1Score = 0;
+                      team2 = false;
+                      team2Bid = 0;
+                      team2Score = 0;
+                      bidValue = 0;
+                      dropDownValue = 5;
+                      team2Scores.clear();
+                      team1Scores.clear();
+                      myController.clear();
+                    });
+                  }, 150),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  customButton('SHLM FOR TEAM 2', () {
+                    setState(() {
+                      team2Scores.add(team2Scores.last + 260);
+                      team1Scores.add(team1Scores.last - 260);
+                    });
+                  }, 140),
+                  customButton('SHLM FOR TEAM 1', () {
+                    setState(() {
+                      team1Scores.add(team1Scores.last + 260);
+                      team2Scores.add(team2Scores.last - 260);
+                    });
+                  }, 140),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  customButton('ADD 260 FOR TEAM 2', () {
+                    setState(() {
+                      team2Scores.add(team2Scores.last + 260);
+                      team1Scores.add(team1Scores.last);
+                    });
+                  }, 140),
+                  customButton('ADD 260 FOR TEAM 1', () {
+                    setState(() {
+                      team1Scores.add(team1Scores.last + 260);
+                      team2Scores.add(team2Scores.last);
+                    });
+                  }, 140),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  customButton('SUBTRACT 260 FROM TEAM 2', () {
+                    setState(() {
+                      team2Scores.add(team2Scores.last - 260);
+                      team1Scores.add(team1Scores.last);
+                    });
+                  }, 140),
+                  customButton('SUBTRACT 260 FROM TEAM 1', () {
+                    setState(() {
+                      team1Scores.add(team1Scores.last - 260);
+                      team2Scores.add(team2Scores.last);
+                    });
+                  }, 140),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
