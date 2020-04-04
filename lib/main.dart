@@ -4,7 +4,6 @@ import 'views/game.dart';
 import 'views/englishRules.dart';
 import 'views/gameArabic.dart';
 import 'views/arabicRules.dart';
-import 'views/arabicInstructions.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,7 +18,6 @@ class MyApp extends StatelessWidget {
         'englishRules': (context) => EnglishRules(),
         'gameArabic': (context) => GameArabic(),
         'arabicRules': (context) => ArabicRules(),
-        'arabicInstructions': (context) => ArabicInstructions(),
       },
     );
   }

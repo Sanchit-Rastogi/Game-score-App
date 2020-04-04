@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:alisshelemios/constants/styles.dart';
 import 'package:alisshelemios/constants/values.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 class Game extends StatefulWidget {
   @override
@@ -19,8 +20,49 @@ class _GameState extends State<Game> {
   bool team2 = false;
   List<int> team1Scores = [];
   List<int> team2Scores = [];
+  int count = 0;
 
   final myController = TextEditingController();
+
+  String currentDevice = '';
+
+  static final MobileAdTargetingInfo targetInfo = MobileAdTargetingInfo(
+    keywords: <String>['game', 'shelem', 'card', 'score', 'win'],
+    testDevices: <String>[],
+  );
+
+  BannerAd bannerAd = BannerAd(
+    adUnitId: 'ca-app-pub-2037047472590211/4646955042',
+    size: AdSize.smartBanner,
+    targetingInfo: targetInfo,
+    listener: (MobileAdEvent event) {
+      print("BannerAd event is $event");
+    },
+  );
+
+  InterstitialAd interstitialAd = InterstitialAd(
+    adUnitId: 'ca-app-pub-2037047472590211/1775936047',
+    targetingInfo: targetInfo,
+    listener: (MobileAdEvent event) {
+      print("InterstitialAd event is $event");
+    },
+  );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    count = 0;
+    FirebaseAdMob.instance
+        .initialize(appId: 'ca-app-pub-2037047472590211~5715181052');
+    bannerAd
+      ..load()
+      ..show(
+        anchorOffset: 60.0,
+        horizontalCenterOffset: 10.0,
+        anchorType: AnchorType.bottom,
+      );
+  }
 
   void assignValue() {
     int value = int.parse(myController.text);
@@ -110,39 +152,61 @@ class _GameState extends State<Game> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   customButton('CALCULATE', () {
+                    count++;
+                    if (count % 3 == 0) {
+                      interstitialAd
+                        ..load()
+                        ..show();
+                    }
                     assignValue();
                     if (team1 == true) {
                       int check = 80 - team1Bid;
-                      if (check >= team2Bid) {
+                      if (check > team2Bid) {
                         setState(() {
-                          team1Score = team1Bid;
-                          team1Scores.add(team1Score);
-                          team2Score = -100 + (-team2Bid);
-                          team2Scores.add(team2Score);
+                          team1Score = 100 + (75 - team2Bid);
+                          (team1Scores.length == 0)
+                              ? team1Scores.add(team1Score)
+                              : team1Scores.add(team1Scores.last + team1Score);
+                          team2Score = team2Bid;
+                          (team2Scores.length == 0)
+                              ? team2Scores.add(team2Score)
+                              : team2Scores.add(team2Scores.last + team2Score);
                         });
                       } else {
                         setState(() {
                           team1Score = -100 + (-team1Bid);
-                          team1Scores.add(team1Score);
+                          (team1Scores.length == 0)
+                              ? team1Scores.add(team1Score)
+                              : team1Scores.add(team1Scores.last + team1Score);
                           team2Score = team2Bid;
-                          team2Scores.add(team2Score);
+                          (team2Scores.length == 0)
+                              ? team2Scores.add(team2Score)
+                              : team2Scores.add(team2Scores.last + team2Score);
                         });
                       }
                     } else {
                       int check = 80 - team2Bid;
-                      if (check >= team1Bid) {
+                      if (check > team1Bid) {
                         setState(() {
-                          team1Score = -100 + (-team1Bid);
-                          team1Scores.add(team1Score);
-                          team2Score = team2Bid;
-                          team2Scores.add(team2Score);
+                          team1Score = team1Bid;
+                          (team1Scores.length == 0)
+                              ? team1Scores.add(team1Score)
+                              : team1Scores.add(team1Scores.last + team1Score);
+                          team2Score = 100 + (75 - team1Bid);
+                          (team2Scores.length == 0)
+                              ? team2Scores.add(team2Score)
+                              : team2Scores.add(team2Scores.last + team2Score);
                         });
                       } else {
                         setState(() {
                           team1Score = team1Bid;
-                          team1Scores.add(team1Score);
+                          (team1Scores.length == 0)
+                              ? team1Scores.add(team1Score)
+                              : team1Scores.add(team1Scores.last + team1Score);
                           team2Score = -100 + (-team2Bid);
-                          team2Scores.add(team2Score);
+                          (team2Scores.length == 0)
+                              ? team2Scores.add(team2Score)
+                              : team2Scores.add(team2Scores.last + team2Score);
                         });
                       }
                     }
@@ -154,8 +218,16 @@ class _GameState extends State<Game> {
                     ),
                     onPressed: () {
                       setState(() {
-                        team1Scores.removeLast();
-                        team2Scores.removeLast();
+                        if (team1Scores.length > 0) {
+                          (team1Scores.length == 1)
+                              ? team1Scores.clear()
+                              : team1Scores.removeLast();
+                        }
+                        if (team2Scores.length > 0) {
+                          (team2Scores.length == 1)
+                              ? team2Scores.clear()
+                              : team2Scores.removeLast();
+                        }
                       });
                     },
                   ),
@@ -212,14 +284,22 @@ class _GameState extends State<Game> {
                 children: <Widget>[
                   customButton('SHLM FOR TEAM 2', () {
                     setState(() {
-                      team2Scores.add(team2Scores.last + 260);
-                      team1Scores.add(team1Scores.last - 260);
+                      team2Scores.isEmpty
+                          ? team2Scores.add(260)
+                          : team2Scores.add(team2Scores.last + 260);
+                      team1Scores.isEmpty
+                          ? team1Scores.add(-260)
+                          : team1Scores.add(team1Scores.last - 260);
                     });
                   }, 140),
                   customButton('SHLM FOR TEAM 1', () {
                     setState(() {
-                      team1Scores.add(team1Scores.last + 260);
-                      team2Scores.add(team2Scores.last - 260);
+                      team1Scores.isEmpty
+                          ? team1Scores.add(260)
+                          : team1Scores.add(team1Scores.last + 260);
+                      team2Scores.isEmpty
+                          ? team2Scores.add(-260)
+                          : team2Scores.add(team2Scores.last - 260);
                     });
                   }, 140),
                 ],
@@ -232,14 +312,22 @@ class _GameState extends State<Game> {
                 children: <Widget>[
                   customButton('ADD 260 FOR TEAM 2', () {
                     setState(() {
-                      team2Scores.add(team2Scores.last + 260);
-                      team1Scores.add(team1Scores.last);
+                      team2Scores.isEmpty
+                          ? team2Scores.add(260)
+                          : team2Scores.add(team2Scores.last + 260);
+                      team1Scores.isEmpty
+                          ? team1Scores.add(0)
+                          : team1Scores.add(team1Scores.last);
                     });
                   }, 140),
                   customButton('ADD 260 FOR TEAM 1', () {
                     setState(() {
-                      team1Scores.add(team1Scores.last + 260);
-                      team2Scores.add(team2Scores.last);
+                      team1Scores.isEmpty
+                          ? team1Scores.add(260)
+                          : team1Scores.add(team1Scores.last + 260);
+                      team2Scores.isEmpty
+                          ? team2Scores.add(0)
+                          : team2Scores.add(team2Scores.last);
                     });
                   }, 140),
                 ],
@@ -252,14 +340,22 @@ class _GameState extends State<Game> {
                 children: <Widget>[
                   customButton('SUBTRACT 260 FROM TEAM 2', () {
                     setState(() {
-                      team2Scores.add(team2Scores.last - 260);
-                      team1Scores.add(team1Scores.last);
+                      team2Scores.isEmpty
+                          ? team2Scores.add(-260)
+                          : team2Scores.add(team2Scores.last - 260);
+                      team1Scores.isEmpty
+                          ? team1Scores.add(0)
+                          : team1Scores.add(team1Scores.last);
                     });
                   }, 140),
                   customButton('SUBTRACT 260 FROM TEAM 1', () {
                     setState(() {
-                      team1Scores.add(team1Scores.last - 260);
-                      team2Scores.add(team2Scores.last);
+                      team1Scores.isEmpty
+                          ? team1Scores.add(-260)
+                          : team1Scores.add(team1Scores.last - 260);
+                      team2Scores.isEmpty
+                          ? team2Scores.add(0)
+                          : team2Scores.add(team2Scores.last);
                     });
                   }, 140),
                 ],
